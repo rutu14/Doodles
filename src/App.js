@@ -1,16 +1,37 @@
-import { Button, extendTheme } from "@chakra-ui/react";
+import { Button, Box, extendTheme } from "@chakra-ui/react";
 import { Navigate, Outlet, Route, Routes } from "react-router";
-import { Dashboard, Home, Login, Register } from "./pages";
+import { AddNote, Dashboard, Home, Login, Register } from "./pages";
 import { userSelector } from "./redux/auth";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Actions from "./pages/Dashboard/Actions";
+import EditNote from "./pages/Dashboard/EditNote";
+
+export const theme = extendTheme({
+    colors: {
+        tags: {
+            100:'#9da8e9',
+            200:'#f69696',
+            300:'#9281d7'
+        },
+      },
+    fonts: {
+        brandFont: `'Handlee', cursive`,
+        heading: `'Montserrat',sans-serif`,
+        body: `'Montserrat',sans-serif`
+    },
+})
 
 const PrivateRoute = () => {
     const { user } = useSelector( userSelector );
     const tokenPresent = user ? true : false;
 
     return tokenPresent 
-            ?  <Outlet/> 
+            ?  <Box minH={'100vh'} bg={'#ccccff42'}>
+                    <Navbar/>
+                    <Outlet/>
+                </Box> 
             :   <Navigate to="/login" />;
 }
 
@@ -35,6 +56,9 @@ function App() {
             </Route>
             <Route element={<PrivateRoute/>}>
 			    <Route path='dashboard' element={<Dashboard/>}/>
+                <Route path='add' element={<AddNote/>}/>
+                <Route path='action' element={<Actions/>}/>
+                <Route path='edit' element={<EditNote/>}/>
             </Route>
         </Routes>
       );

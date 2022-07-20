@@ -9,7 +9,6 @@ export const signupUser = createAsyncThunk(
         localStorage.setItem("token", data.encodedToken);
         return data;
       } catch (e) {
-        console.log("Error", e.response.data.errors[0]);
         return thunkAPI.rejectWithValue(e.response.data.errors[0]);
       }
     }
@@ -22,7 +21,6 @@ export const signupUser = createAsyncThunk(
         localStorage.setItem("token", data.encodedToken);
         return data
       } catch (e) {
-        console.log("Error", e.response.data.errors[0]);
         thunkAPI.rejectWithValue(e.response.data.errors[0]);
       }
     }

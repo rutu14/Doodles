@@ -45,11 +45,7 @@ export const createNoteHandler = function (schema, request) {
       );
     }
     const { note } = JSON.parse(request.requestBody);
-    if (!note.tags) {
-      user.notes.push({ ...note, _id: uuid(), tags: [] });
-    } else {
-      user.notes.push({ ...note, _id: uuid() });
-    }
+    user.notes.push({ ...note, _id: uuid() });
     this.db.users.update({ _id: user._id }, user);
     return new Response(201, {}, { notes: user.notes });
   } catch (error) {
@@ -203,3 +199,73 @@ export const trashNoteHandler = function (schema, request) {
     );
   }
 };
+
+export const getTagsHandler = function (schema, request) {
+    const user = requiresAuth.call(this, request);
+    if (!user) {
+      return new Response(
+        404,
+        {},
+        {
+          errors: ["The email you entered is not Registered. Not Found error"],
+        }
+      );
+    }
+    return new Response(200, {}, { tags: user.tags });
+  };
+  
+  /**
+   * This handler handles creating user project tags.
+   * send POST Request at /api/tags/:tagName
+   * */
+  
+  export const createTagHandler = function (schema, request) {
+    const user = requiresAuth.call(this, request);
+    if (!user) {
+      return new Response(
+        404,
+        {},
+        {
+          errors: ["The email you entered is not Registered. Not Found error"],
+        }
+      );
+    }
+    const { tag } = JSON.parse(request.requestBody);
+    const indexFound = user.tags.findIndex((tagPresent) => tagPresent.tagName === tag.tagName );
+    if (indexFound !== -1 ) {
+      return new Response(
+        409,
+        {},
+        { errors: ["Duplicate data found. Tag name must be unique."] }
+      );
+    }
+    const createdTag = {
+      _id: uuid(),
+      ...tag,
+    };
+    user.tags.push(createdTag);
+    this.db.users.update({ _id: user._id }, user);
+    return new Response(200, {}, { tags: user.tags });
+  };
+  
+  /**
+   * This handler handles deleting user project tags.
+   * send DELETE Request at /api/tags/:tagName
+   * */
+  
+  export const deleteTagHandler = function (schema, request) {
+    const user = requiresAuth.call(this, request);
+    if (!user) {
+      return new Response(
+        404,
+        {},
+        {
+          errors: ["The email you entered is not Registered. Not Found error"],
+        }
+      );
+    }
+    const tagId = request.params.tagId;
+    user.tags = user.tags.filter((tag) => tag._id !== tagId);
+    this.db.users.update({ _id: user._id }, user);
+    return new Response(200, {}, { tags: user.tags });
+  };
