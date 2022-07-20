@@ -12,8 +12,11 @@ import {
 import {
   archiveNoteHandler,
   createNoteHandler,
+  createTagHandler,
   deleteNoteHandler,
+  deleteTagHandler,
   getAllNotesHandler,
+  getTagsHandler,
   trashNoteHandler,
   updateNoteHandler,
 } from "./backend/controllers/NotesController";
@@ -42,6 +45,7 @@ export function makeServer({ environment = "development" } = {}) {
         server.create("user", {
           ...item,
           notes: [],
+          tags:[],
           archives: [],
           trash: [],
         })
@@ -66,16 +70,16 @@ export function makeServer({ environment = "development" } = {}) {
       this.post("/notes/archives/:noteId", archiveNoteHandler.bind(this));
       this.post("/notes/trash/:noteId", trashNoteHandler.bind(this));
 
+      // tag routes(private)
+      this.get("tags", getTagsHandler.bind(this));
+      this.post("tags/addtag", createTagHandler.bind(this));
+      this.delete("tags/:tagId", deleteTagHandler.bind(this));
+
       // archive routes (private)
       this.get("/archives", getAllArchivedNotesHandler.bind(this));
-      this.post(
-        "/archives/restore/:noteId",
-        restoreFromArchivesHandler.bind(this)
-      );
-      this.delete(
-        "/archives/delete/:noteId",
-        deleteFromArchivesHandler.bind(this)
-      );
+      this.post("/archives/restore/:noteId", restoreFromArchivesHandler.bind(this));
+      this.delete("/archives/delete/:noteId", deleteFromArchivesHandler.bind(this));
+
       // trash routes (private)
       this.get("/trash", getAllTrashNotesHandler.bind(this));
       this.post("/trash/restore/:noteId", restoreFromTrashHandler.bind(this));
