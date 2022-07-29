@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "./index.css";
 import App, { theme } from "./App";
 import { makeServer } from "./server";
@@ -8,17 +8,19 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import store from "./store";
 
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
+
 makeServer();
 
-ReactDOM.render(
-  	<React.StrictMode>
-		<BrowserRouter>
-			<ChakraProvider theme={theme}> 
-				<Provider store={store}>   
-					<App />
-				</Provider>
-			</ChakraProvider>
-		</BrowserRouter>
-	</React.StrictMode>,
-  document.getElementById("root")
+root.render(
+    <React.StrictMode>
+        <BrowserRouter>
+            <ChakraProvider theme={theme}> 
+                <Provider store={store}>   
+                    <App />
+                </Provider>
+            </ChakraProvider>
+        </BrowserRouter>
+    </React.StrictMode>
 );

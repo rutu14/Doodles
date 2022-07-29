@@ -1,7 +1,6 @@
-import { Button,Box, Flex,Grid,GridItem, Spinner,Center,Heading,Stack,FormControl,FormLabel,Input,HStack, Select, useToast, Textarea, CheckboxGroup, Checkbox, IconButton, useDisclosure} from "@chakra-ui/react";
-import { useNavigate } from "react-router";
+import { Button,Box, Flex,Center,Stack,FormControl,FormLabel,Input,HStack, Select, useToast, Textarea, CheckboxGroup, Checkbox, IconButton, useDisclosure} from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createaNote, noteSelector } from "../../redux/notes";
 import { tagSelector } from "../../redux/tag";
 import { AddIcon } from "../../assest/icon";
@@ -81,7 +80,7 @@ const AddNote = () => {
                             {tags && tags.map((tagNumber) => {
                                 return(<Checkbox key={tagNumber._id} borderColor={'#00000047'} value={tagNumber.tagName}>{tagNumber.tagName}</Checkbox>);
                             })}
-                            {tags && tags.length == 0 && <Box>Add Tags</Box>}
+                            {tags && tags.length === 0 && <Box>Add Tags</Box>}
                         </Stack>
                     </CheckboxGroup>
                         </FormControl>
