@@ -1,41 +1,48 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const token = localStorage.getItem("token");
-const config = { headers: { 'authorization': token } };
+import { config, errorMessage } from "../utils";
 
 export const getTags = createAsyncThunk(
     "users/getTags",
-    async (thunkAPI) => {
+    async (toast,thunkAPI) => {
         try {
             const { data } = await axios.get('/api/tags', config);
             return data.tags;
         } catch (e) {
-            return thunkAPI.rejectWithValue(e.response.data.errors[0]);
+            const errorTitle =  e.response.data.errors[0] ? e.response.data.errors[0] : errorMessage;
+            toast({
+                title: errorTitle,
+                status: 'error',
+                variant:'left-accent',
+                isClosable: true,
+            });
+            return thunkAPI.rejectWithValue(errorTitle);;
         }
     }
 )
 
-  export const createaTag = createAsyncThunk(
+export const createaTag = createAsyncThunk(
     "users/createaTag",
     async ({tag,toast},thunkAPI) => {
         try {
             const { data } = await axios.post('/api/tags/addtag', {tag}, config);
             toast({
-                title: 'Added an tag',
+                title: 'Added a tag',
                 status: 'success',
-                variant:'left-accent',
+                variant:'noteCreated',
                 isClosable: true,
+                icon: '🖍'
             });
             return data.tags;
         } catch (e) {
+            const errorTitle =  e.response.data.errors[0] ? e.response.data.errors[0] : errorMessage;
             toast({
-                title: e.response.data.errors[0],
+                title: errorTitle,
                 status: 'error',
                 variant:'left-accent',
                 isClosable: true,
-            }) 
-            return thunkAPI.rejectWithValue(e.response.data.errors[0]);
+            });
+            return thunkAPI.rejectWithValue(errorTitle);;
         }
     }
 )
@@ -48,12 +55,20 @@ export const deleteaTag = createAsyncThunk(
 			toast({
 				title: 'Tag Deleted',
 				status: 'success',
-				variant:'left-accent',
+				variant:'noteDeleted',
 				isClosable: true,
+                icon: '🗑'
 			}) 
 			return data.tags;
 		} catch (e) {
-			thunkAPI.rejectWithValue(e.response.data.errors[0]);
+			const errorTitle =  e.response.data.errors[0] ? e.response.data.errors[0] : errorMessage;
+            toast({
+                title: errorTitle,
+                status: 'error',
+                variant:'left-accent',
+                isClosable: true,
+            });
+            return thunkAPI.rejectWithValue(errorTitle);
 		}
     }
 )

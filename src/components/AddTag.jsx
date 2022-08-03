@@ -1,7 +1,7 @@
-import { Box, Button, Flex, FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Select, Stack, useToast } from "@chakra-ui/react"
+import { Box, Button, Flex, FormControl, FormLabel, HStack, Input, Modal, ModalBody, ModalCloseButton,  ModalContent, ModalFooter, ModalHeader, ModalOverlay, Radio, RadioGroup, Stack, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { createaTag } from "../redux/tag";
+import { createaTag } from "../redux";
 
 const AddTag = ({isOpen,onClose}) => {
     const toast = useToast();

@@ -1,26 +1,30 @@
-import { Button,Box, Flex,Center,Stack,FormControl,FormLabel,Input,HStack, Select, useToast, Textarea, CheckboxGroup, Checkbox, IconButton, useDisclosure} from "@chakra-ui/react";
+import { Box, Button, Center, Checkbox, CheckboxGroup, Flex, FormControl, FormLabel, HStack, IconButton,Input, Select, Stack, Textarea, useDisclosure, useToast } from "@chakra-ui/react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { editaNote, noteSelector } from "../../redux/notes";
-import { tagSelector } from "../../redux/tag";
+import { editaNote, noteSelector, tagSelector } from "../../redux";
 import { AddIcon } from "../../assest/icon";
 import { capitializeString, colorOption } from "../../utils";
-import AddTag from "../../components/AddTag";
+import { AddTag } from "../../components";
 
-const EditNote = () => {
+const EditNote = () => {    
+    const toast = useToast();
     const location = useLocation();
     const navigate = useNavigate();
-    const toast = useToast();
     const dispatch = useDispatch();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const { noteDetail } = location.state;
     const initialState = {title:noteDetail.title,content:noteDetail.content,color:noteDetail.color,tags:noteDetail.tags,createdDate:noteDetail.createdDate,createdTime:noteDetail.createdTime,updatedDate:noteDetail.updatedDate,updatedTime:noteDetail.updatedTime}
     const [ noteInputs, setNoteInputs ] = useState(initialState);
-    const { isCreateFetching } = useSelector( noteSelector );
-    const { tags,isTagFetching } = useSelector( tagSelector );
 
+    const { isCreateFetching } = useSelector( noteSelector );
+    const { tags, isTagFetching } = useSelector( tagSelector );
+
+    const handleKeyDown = (e) => {
+        e.target.style.height = "inherit";
+        e.target.style.height = `${e.target.scrollHeight}px`;
+    };
 
     const onSubmit = () => {
 		if( noteInputs.title === "" ){
@@ -91,7 +95,7 @@ const EditNote = () => {
                         </FormControl>
                     </HStack>                    
                     <FormLabel fontSize={'22px'} lineHeight={'32px'} fontWeight={'light'} htmlFor='content'>Content</FormLabel>
-                    <Textarea value={noteInputs.content} onChange={handleChange} name='content' borderColor={'#00000047'} bg={'#f6f8ffc7'} _focus={{bg:'#f6f8ff'}} id="content" type="text">
+                    <Textarea value={noteInputs.content} onChange={handleChange} name='content' borderColor={'#00000047'} bg={'#f6f8ffc7'} _focus={{bg:'#f6f8ff'}} id="content" type="text" onKeyDown={handleKeyDown} >
                     </Textarea>
 				</Stack>
                 <Flex w={'full'} mt={'5'} justifyContent={'center'}>

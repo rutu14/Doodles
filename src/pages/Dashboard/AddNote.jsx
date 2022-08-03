@@ -1,21 +1,30 @@
-import { Button,Box, Flex,Center,Stack,FormControl,FormLabel,Input,HStack, Select, useToast, Textarea, CheckboxGroup, Checkbox, IconButton, useDisclosure} from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { Box, Button, Center, Checkbox, CheckboxGroup, Flex, FormControl, FormLabel, HStack, IconButton,Input, Select, Stack, Textarea, useDisclosure, useToast} from "@chakra-ui/react";
 import { useState } from "react";
-import { createaNote, noteSelector } from "../../redux/notes";
-import { tagSelector } from "../../redux/tag";
+import { useDispatch, useSelector } from "react-redux";
+import { createaNote, noteSelector, tagSelector } from "../../redux";
 import { AddIcon } from "../../assest/icon";
 import { capitializeString, colorOption } from "../../utils";
-import AddTag from "../../components/AddTag";
+import { AddTag } from "../../components";
+import { useNavigate } from "react-router";
 
 const AddNote = () => {
     const toast = useToast();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
     const initialState = {title:'',content:'',color:"default",tags:[],createdDate:new Date(Date.now()).toLocaleString('en-IN').split(",")[0],createdTime:new Date(Date.now()).toLocaleString('en-IN').split(",")[1],updatedDate:'',updatedTime:''}
     const [ noteInputs, setNoteInputs ] = useState(initialState);
 
     const { isCreateFetching } = useSelector( noteSelector );
     const { tags,isTagFetching } = useSelector( tagSelector );
+
+    const goToDashboard = () => navigate('/dashboard');
+
+    const handleKeyDown = (e) => {
+        e.target.style.height = "inherit";
+        e.target.style.height = `${e.target.scrollHeight}px`;
+    };
 
     const onSubmit = () => {
 		if( noteInputs.title === '' ){
@@ -36,6 +45,7 @@ const AddNote = () => {
             const createParameter = {note: noteInputs, toast};
 			dispatch(createaNote(createParameter));
             setNoteInputs(initialState);
+            goToDashboard();
         }
 	}
     const handleChange = e => {
@@ -86,11 +96,15 @@ const AddNote = () => {
                         </FormControl>
                     </HStack>                    
                     <FormLabel fontSize={'22px'} lineHeight={'32px'} fontWeight={'light'} htmlFor='content'>Content</FormLabel>
-                    <Textarea value={noteInputs.content} onChange={handleChange} name='content' borderColor={'#00000047'} bg={'#f6f8ffc7'} _focus={{bg:'#f6f8ff'}} id="content" type="text">
+                    <Textarea variant={'filled'} value={noteInputs.content} onChange={handleChange} name='content' borderColor={'#00000047'} bg={'#f6f8ffc7'} _focus={{bg:'#f6f8ff'}} id="content" type="text" onKeyDown={handleKeyDown} >
                     </Textarea>
 				</Stack>
-                <Flex w={'full'} mt={'3'} justifyContent={'center'}>
-                    <Button disabled={isCreateFetching} textTransform={'uppercase'} colorScheme={'purple'}onClick={onSubmit}>     Add Note                   
+                <Flex w={'full'} mt={'5'} justifyContent={'center'}>
+                    <Button disabled={isCreateFetching} textTransform={'uppercase'} colorScheme={'purple'}onClick={onSubmit} mr={10}>    
+                         Add Note                   
+                    </Button>
+                    <Button variant={'outline'} borderWidth={'2px'} borderColor={'gray.700'} disabled={isCreateFetching} textTransform={'uppercase'} colorScheme={'gray'}onClick={goToDashboard}>    
+                         Back to Dashboard                 
                     </Button>
                 </Flex>
         <AddTag isOpen={isOpen} onClose={onClose}></AddTag>     
