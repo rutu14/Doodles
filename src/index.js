@@ -8,10 +8,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import store from "./store";
 
+makeServer();
+
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
-
-makeServer();
 
 root.render(
     <React.StrictMode>
