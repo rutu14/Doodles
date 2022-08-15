@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { config, errorMessage } from "../utils";
+import { errorMessage } from "../utils";
 
 export const getTags = createAsyncThunk(
     "users/getTags",
     async (toast,thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.get('/api/tags', config);
             return data.tags;
         } catch (e) {
@@ -25,6 +27,8 @@ export const createaTag = createAsyncThunk(
     "users/createaTag",
     async ({tag,toast},thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.post('/api/tags/addtag', {tag}, config);
             toast({
                 title: 'Added a tag',
@@ -51,6 +55,8 @@ export const deleteaTag = createAsyncThunk(
     "users/deleteaTag",
     async ({tagId,toast},thunkAPI) => {
 		try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
 			const { data } = await axios.delete( `/api/tags/${tagId}`, config);
 			toast({
 				title: 'Tag Deleted',

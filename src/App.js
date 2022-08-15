@@ -1,8 +1,6 @@
 import { Button, Box, extendTheme } from "@chakra-ui/react";
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import { Actions, AddNote, Archive, Dashboard, EditNote, Home, Login, Register, Trash, ViewNote } from "./pages";
-import { userSelector } from "./redux/auth";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Navbar from "./components/Navbar";
 
@@ -58,10 +56,9 @@ export const theme = extendTheme({
 })
 
 const PrivateRoute = () => {
-    const { user } = useSelector( userSelector );
-    const tokenPresent = user ? true : false;
+    const token = localStorage.getItem("token");
 
-    return tokenPresent 
+    return token 
             ?  <Box minH={'100vh'} bg={'#ccccff42'}>
                     <Navbar/>
                     <Outlet/>

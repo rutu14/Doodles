@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { config, errorMessage } from "../utils";
+import { errorMessage } from "../utils";
 
 export const getAllNotes = createAsyncThunk(
     "users/getAllNotes",
     async (toast,thunkAPI) => {
 		try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
 			const { data } = await axios.get( '/api/notes', config);
 			return data.notes;
 		} catch (e) {
@@ -25,6 +27,8 @@ export const createaNote = createAsyncThunk(
     "users/createaNote",
     async ({note,toast},thunkAPI) => {
 		try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
 			const { data } = await axios.post( '/api/notes', {note}, config);
 			toast({
 				title: 'Added a Note',
@@ -50,6 +54,8 @@ export const editaNote = createAsyncThunk(
     "users/editaNote",
     async ({noteId, note, toast}, thunkAPI) => {
 		try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
 			const { data } = await axios.post( `/api/notes/${noteId}`, {note}, config);
 			toast({
 				title: 'Updated the Note',
@@ -75,8 +81,10 @@ export const getArchive = createAsyncThunk(
     "users/getArchive",
     async (toast,thunkAPI) => {
       try {
-        const { data } = await axios.get( '/api/archives', config);
-        return data.archives;
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
+            const { data } = await axios.get( '/api/archives', config);
+            return data.archives;
       } catch (e) {
             const errorTitle =  e.response.data.errors[0] ? e.response.data.errors[0] : errorMessage;
             toast({
@@ -94,6 +102,8 @@ export const getArchive = createAsyncThunk(
     "users/addToArchive",
     async ({noteId,toast},thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.post( `/api/notes/archives/${noteId}`, {}, config);
             toast({
                 title: 'Added to archive',
@@ -120,6 +130,8 @@ export const getArchive = createAsyncThunk(
     "users/restoreArchive",
     async ({noteId, toast}, thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.post( `/api/archives/restore/${noteId}`,{}, config);
             toast({
                 title: 'Restored the archive',
@@ -146,6 +158,8 @@ export const deleteArchive = createAsyncThunk(
     "users/deleteArchive",
     async ({noteId, toast},thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.delete( `/api/archives/delete/${noteId}`, config);
             toast({
 				title: 'Deleted the archive',
@@ -172,6 +186,8 @@ export const getTrash = createAsyncThunk(
     "users/getTrash",
     async (toast,thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.get('/api/trash', config);
             return data.trash;
         } catch (e) {
@@ -191,6 +207,8 @@ export const addtoTrash = createAsyncThunk(
     "users/addtoTrash",
     async ({noteId,toast},thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.post(`/api/notes/trash/${noteId}`,{}, config);
             toast({
                 title: 'Moved to trash',
@@ -217,6 +235,8 @@ export const restorefromTrash = createAsyncThunk(
     "users/restorefromTrash",
     async ({noteId,toast},thunkAPI) => {
         try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
             const { data } = await axios.post(`/api/trash/restore/${noteId}`,{}, config);
             toast({
                 title: 'Restored the Note',
@@ -243,6 +263,8 @@ export const deleteNoteFromTrash = createAsyncThunk(
     "users/deleteNoteFromTrash",
     async ({noteId,toast},thunkAPI) => {
 		try {
+            const token = localStorage.getItem("token");
+            const config = { headers: { 'authorization': token } };
 			const { data } = await axios.delete( `/api/trash/delete/${noteId}`, config);
 			toast({
 				title: 'Deleted the Note',
